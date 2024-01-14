@@ -1,3 +1,6 @@
+import { useLoaderData } from "@remix-run/react";
+import { db } from "~/db/config.server";
+
 export function headers({
   loaderHeaders,
   parentHeaders,
@@ -15,7 +18,14 @@ export function headers({
   };
 }
 
+export const loader = async () => {
+  const x = await db.query.locations.findMany();
+  return { message: "Hello from loader!", locations: x };
+};
+
 export default function Index() {
+  const { locations } = useLoaderData<typeof loader>();
+
   return (
     <main style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }}>
       <h1>Welcome to Remix</h1>
